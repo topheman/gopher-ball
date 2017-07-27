@@ -6,6 +6,7 @@ import (
 
 	"time"
 
+	"github.com/veandco/go-sdl2/img"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -24,15 +25,43 @@ func run() error {
 	}
 	defer sdl.Quit()
 
-	window, renderer, err := sdl.CreateWindowAndRenderer(800, 600, sdl.WINDOW_SHOWN)
+	w, r, err := sdl.CreateWindowAndRenderer(800, 600, sdl.WINDOW_SHOWN)
 	if err != nil {
 		return fmt.Errorf("Error creating window: %v", err)
 	}
-	defer window.Destroy()
+	defer w.Destroy()
 
-	_ = renderer
+	_ = r
 
-	time.Sleep(time.Second * 3)
+	if err := drawWelcomeScreen(r); err != nil {
+		return fmt.Errorf("Error drawing welcome screen: %v", err)
+	}
+
+	time.Sleep(time.Second * 5)
+
+	return nil
+}
+
+func drawWelcomeScreen(r *sdl.Renderer) error {
+	r.Clear()
+
+	gopherTexture, err := img.LoadTexture(r, "assets/imgs/gopher.png")
+	if err != nil {
+		return fmt.Errorf("Error loading gopher texture: %v", err)
+	}
+	defer gopherTexture.Destroy()
+
+	ballTexture, err := img.LoadTexture(r, "assets/imgs/ball-steel.png")
+	if err != nil {
+		return fmt.Errorf("Error loading ball texture: %v", err)
+	}
+	defer ballTexture.Destroy()
+
+	r.Copy(gopherTexture, nil, nil)
+
+	r.Copy(ballTexture, nil, nil)
+
+	r.Present()
 
 	return nil
 }
