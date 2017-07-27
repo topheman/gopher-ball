@@ -57,6 +57,10 @@ func drawWelcomeScreen(r *sdl.Renderer) error {
 	}
 	defer ballTexture.Destroy()
 
+	game, err := newGame(r, 800, 600, 300, true)
+
+	_ = game
+
 	r.Copy(gopherTexture, nil, nil)
 
 	r.Copy(ballTexture, nil, nil)
