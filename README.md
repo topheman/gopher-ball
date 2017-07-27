@@ -27,6 +27,14 @@ $ go get -v github.com/veandco/go-sdl2/img
 $ go get -v github.com/veandco/go-sdl2/ttf
 ```
 
+## Build
+
+```
+./build.sh
+```
+
+The built files will be created in `./build/dist`. They are ignored by git.
+
 ## Credits
 
 - assets/imgs/wood-background.png - [source](https://fr.vecteezy.com/art-vectoriel/133727-vector-wood-planks-background) - copyright by [carterart](https://fr.vecteezy.com/membres/carterart)
