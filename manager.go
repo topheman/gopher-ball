@@ -31,8 +31,8 @@ func (m *manager) run(r *sdl.Renderer) error {
 }
 
 func (m *manager) destroy() {
-	log.Println("[Game manager] Game started")
-	m.paused = false
+	defer log.Println("[Game manager] Game manager destroyed")
+	m.game.destroy()
 }
 
 func (m *manager) togglePause() {

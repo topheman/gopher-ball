@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/veandco/go-sdl2/img"
 	"github.com/veandco/go-sdl2/sdl"
@@ -34,6 +35,11 @@ func newPlayer(r *sdl.Renderer) (*player, error) {
 func (p *player) reset(x, y int32) {
 	p.x = x
 	p.y = y
+}
+
+func (p *player) destroy() {
+	defer log.Println("[Player] Player destroyed")
+	p.texture.Destroy()
 }
 
 func (p *player) render(r *sdl.Renderer) error {

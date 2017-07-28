@@ -48,6 +48,8 @@ func run() error {
 	}
 
 	manager.run(r)
+	// cleanup all resources of the manager
+	defer manager.destroy()
 
 	return nil
 }

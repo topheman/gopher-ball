@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/veandco/go-sdl2/img"
 	"github.com/veandco/go-sdl2/sdl"
@@ -25,7 +26,8 @@ func (g *game) run(r *sdl.Renderer) <-chan error {
 	log.Println("[Game] Game started")
 	errChannel := make(chan error)
 	go func() {
-		for {
+		defer close(errChannel)
+		for range time.Tick(time.Millisecond) {
 			r.Clear()
 			if err := g.player.render(r); err != nil {
 				errChannel <- err
@@ -37,7 +39,11 @@ func (g *game) run(r *sdl.Renderer) <-chan error {
 }
 
 func (g *game) destroy() {
-	log.Println("[Game] Game destroyed")
+	defer log.Println("[Game] Game destroyed")
+	g.player.destroy()
+	for _, t := range g.textures {
+		t.Destroy()
+	}
 }
 
 func (g *game) update() {
