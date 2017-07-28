@@ -3,12 +3,13 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
 
 type manager struct {
-	game   interface{}
+	game   *game
 	meta   interface{}
 	paused bool
 }
@@ -18,9 +19,15 @@ func (m *manager) reset() {
 	m.paused = false
 }
 
-func (m *manager) start() {
+func (m *manager) run(r *sdl.Renderer) error {
 	log.Println("[Game manager] Game started")
 	m.paused = false
+	select {
+	case <-m.game.run(r):
+		return fmt.Errorf("Game loop problem")
+	case <-time.After(time.Second * 5):
+		return nil
+	}
 }
 
 func (m *manager) destroy() {

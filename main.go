@@ -40,7 +40,14 @@ func run() error {
 		return fmt.Errorf("Error drawing welcome screen: %v", err)
 	}
 
-	time.Sleep(time.Second * 5)
+	time.Sleep(time.Second * 2)
+
+	manager, err := newManager(r, gameWidth, gameHeight, true)
+	if err != nil {
+		return fmt.Errorf("Error creating Game manager: %v", err)
+	}
+
+	manager.run(r)
 
 	return nil
 }
@@ -59,10 +66,6 @@ func drawWelcomeScreen(r *sdl.Renderer) error {
 		return fmt.Errorf("Error loading ball texture: %v", err)
 	}
 	defer ballTexture.Destroy()
-
-	game, err := newGame(r, gameWidth, gameHeight, true)
-
-	_ = game
 
 	r.Copy(gopherTexture, nil, nil)
 
