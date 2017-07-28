@@ -45,8 +45,8 @@ func (m *manager) togglePause() {
 	log.Println("[Game manager] Game resumed")
 }
 
-func newManager(r *sdl.Renderer, w, h int32, eventsChan interface{}) (*manager, error) {
-	game, err := newGame(r, w, h/2, eventsChan)
+func newManager(r *sdl.Renderer, w, h, metaWidth int32, eventsChan interface{}) (*manager, error) {
+	game, err := newGame(r, w-metaWidth, h, eventsChan)
 	if err != nil {
 		return nil, fmt.Errorf("Error creating game: %v", err)
 	}

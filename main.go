@@ -12,6 +12,7 @@ import (
 
 const gameWidth = 1024
 const gameHeight = 768
+const metaWidth = 300
 
 func main() {
 	err := run()
@@ -42,7 +43,7 @@ func run() error {
 
 	time.Sleep(time.Second * 2)
 
-	manager, err := newManager(r, gameWidth, gameHeight, true)
+	manager, err := newManager(r, gameWidth, gameHeight, metaWidth, true)
 	if err != nil {
 		return fmt.Errorf("Error creating Game manager: %v", err)
 	}

@@ -90,7 +90,7 @@ func newGame(r *sdl.Renderer, w, h int32, eventsChan interface{}) (*game, error)
 // background
 
 func (g *game) renderBackground(r *sdl.Renderer) error {
-	bgRect := &sdl.Rect{X: 0, Y: 0, W: g.w / 2, H: 1400}
+	bgRect := &sdl.Rect{X: 0, Y: 0, W: g.w, H: 1400}
 	if err := r.Copy(g.textures["bg"], nil, bgRect); err != nil {
 		return fmt.Errorf("could not copy background: %v", err)
 	}
@@ -98,7 +98,7 @@ func (g *game) renderBackground(r *sdl.Renderer) error {
 	if err := r.CopyEx(g.textures["wall"], nil, leftWallRect, 0, nil, sdl.FLIP_HORIZONTAL); err != nil {
 		return fmt.Errorf("could not copy leftWallRect: %v", err)
 	}
-	rightWallRect := &sdl.Rect{X: g.w/2 - 80, Y: 0, W: 80, H: 1400}
+	rightWallRect := &sdl.Rect{X: g.w - 80, Y: 0, W: 80, H: 1400}
 	if err := r.Copy(g.textures["wall"], nil, rightWallRect); err != nil {
 		return fmt.Errorf("could not copy rightWallRect: %v", err)
 	}
