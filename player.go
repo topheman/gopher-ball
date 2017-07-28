@@ -15,8 +15,8 @@ type player struct {
 	h        int32
 	x        int32
 	y        int32
-	dx       int32
-	dy       int32
+	dx       float32
+	dy       float32
 	textures map[string]*sdl.Texture
 }
 
@@ -39,6 +39,7 @@ func newPlayer(r *sdl.Renderer) (*player, error) {
 		h:        50,
 		x:        150,
 		y:        500,
+		dx:       1.5,
 		textures: textures,
 	}, nil
 }
@@ -57,6 +58,13 @@ func (p *player) destroy() {
 	for _, t := range p.textures {
 		t.Destroy()
 	}
+}
+
+func (p *player) update() {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	p.x = int32((float32(p.x*100) + p.dx*100) / 100)
+	p.y = int32((float32(p.y*100) + p.dy*100) / 100)
 }
 
 func (p *player) render(r *sdl.Renderer) error {

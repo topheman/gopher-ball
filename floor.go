@@ -35,8 +35,6 @@ func (f *floor) update(dx int32) {
 func (f *floor) render(r *sdl.Renderer) error {
 	f.mu.RLock()
 	defer f.mu.RUnlock()
-	log.Println("[Floor] render")
-	defer log.Println("[Floor] end render")
 	bgRect := &sdl.Rect{X: 0, Y: 0, W: f.w, H: 1400}
 	if err := r.Copy(f.textures["bg"], nil, bgRect); err != nil {
 		return fmt.Errorf("[Floor] could not copy background: %v", err)

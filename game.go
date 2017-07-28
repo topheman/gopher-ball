@@ -25,17 +25,25 @@ func (g *game) reset() {
 func (g *game) run(r *sdl.Renderer) <-chan error {
 	log.Println("[Game] Game started")
 	errChannel := make(chan error)
+	// update + render loop
 	go func() {
 		defer close(errChannel)
-		for range time.Tick(time.Millisecond) {
-			r.Clear()
-			if err := g.floor.render(r); err != nil {
-				errChannel <- err
+		tick := time.Tick(5 * time.Millisecond)
+		for {
+			select {
+			case <-tick:
+				// update part
+				g.player.update()
+				// render part
+				r.Clear()
+				if err := g.floor.render(r); err != nil {
+					errChannel <- err
+				}
+				if err := g.player.render(r); err != nil {
+					errChannel <- err
+				}
+				r.Present()
 			}
-			if err := g.player.render(r); err != nil {
-				errChannel <- err
-			}
-			r.Present()
 		}
 	}()
 	return errChannel
