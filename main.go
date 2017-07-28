@@ -10,6 +10,9 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
+const gameWidth = 1024
+const gameHeight = 768
+
 func main() {
 	err := run()
 	if err != nil {
@@ -25,7 +28,7 @@ func run() error {
 	}
 	defer sdl.Quit()
 
-	w, r, err := sdl.CreateWindowAndRenderer(800, 600, sdl.WINDOW_SHOWN)
+	w, r, err := sdl.CreateWindowAndRenderer(gameWidth, gameHeight, sdl.WINDOW_SHOWN)
 	if err != nil {
 		return fmt.Errorf("Error creating window: %v", err)
 	}
@@ -57,7 +60,7 @@ func drawWelcomeScreen(r *sdl.Renderer) error {
 	}
 	defer ballTexture.Destroy()
 
-	game, err := newGame(r, 800, 600, 300, true)
+	game, err := newGame(r, gameWidth, gameHeight, true)
 
 	_ = game
 
