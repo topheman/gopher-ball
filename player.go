@@ -3,49 +3,72 @@ package main
 import (
 	"fmt"
 	"log"
+	"sync"
 
 	"github.com/veandco/go-sdl2/img"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
 type player struct {
-	w       int32
-	h       int32
-	x       int32
-	y       int32
-	dx      int32
-	dy      int32
-	texture *sdl.Texture
+	mu       sync.RWMutex
+	w        int32
+	h        int32
+	x        int32
+	y        int32
+	dx       int32
+	dy       int32
+	textures map[string]*sdl.Texture
 }
 
 func newPlayer(r *sdl.Renderer) (*player, error) {
-	texture, err := img.LoadTexture(r, "assets/imgs/ball-steel.png")
+	textures := make(map[string]*sdl.Texture)
+	ballTexture, err := img.LoadTexture(r, "assets/imgs/ball-steel-no-shadow.png")
 	if err != nil {
 		return nil, fmt.Errorf("Error loading ball texture: %v", err)
 	}
+	textures["ball"] = ballTexture
+
+	shadowTexture, err := img.LoadTexture(r, "assets/imgs/ball-steel-only-shadow.png")
+	if err != nil {
+		return nil, fmt.Errorf("Error loading ball shadow texture: %v", err)
+	}
+	textures["shadow"] = shadowTexture
+
 	return &player{
-		w:       50,
-		h:       50,
-		x:       150,
-		y:       500,
-		texture: texture,
+		w:        50,
+		h:        50,
+		x:        150,
+		y:        500,
+		textures: textures,
 	}, nil
 }
 
 func (p *player) reset(x, y int32) {
+	p.mu.Lock()
+	defer p.mu.Unlock()
 	p.x = x
 	p.y = y
 }
 
 func (p *player) destroy() {
+	p.mu.Lock()
+	defer p.mu.Unlock()
 	defer log.Println("[Player] Player destroyed")
-	p.texture.Destroy()
+	for _, t := range p.textures {
+		t.Destroy()
+	}
 }
 
 func (p *player) render(r *sdl.Renderer) error {
-	rect := &sdl.Rect{X: p.x - p.w/2, Y: p.y - p.h/2 + 10, W: p.w, H: p.h}
-	if err := r.Copy(p.texture, nil, rect); err != nil {
-		return fmt.Errorf("could not copy player background: %v", err)
+	p.mu.RLock()
+	defer p.mu.RUnlock()
+	bgRect := &sdl.Rect{X: p.x - p.w/2, Y: p.y - p.h/2, W: p.w, H: p.h * 256 / 218}
+	if err := r.Copy(p.textures["shadow"], nil, bgRect); err != nil {
+		return fmt.Errorf("could not copy player shadow: %v", err)
+	}
+	rect := &sdl.Rect{X: p.x - p.w/2, Y: p.y - p.h/2, W: p.w, H: p.h}
+	if err := r.Copy(p.textures["ball"], nil, rect); err != nil {
+		return fmt.Errorf("could not copy player ball: %v", err)
 	}
 	return nil
 }

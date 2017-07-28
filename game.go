@@ -10,8 +10,9 @@ import (
 )
 
 type game struct {
-	w          int
-	h          int
+	time       int
+	w          int32
+	h          int32
 	player     *player
 	ennemies   []interface{}
 	textures   map[string]*sdl.Texture
@@ -29,6 +30,9 @@ func (g *game) run(r *sdl.Renderer) <-chan error {
 		defer close(errChannel)
 		for range time.Tick(time.Millisecond) {
 			r.Clear()
+			if err := g.renderBackground(r); err != nil {
+				errChannel <- err
+			}
 			if err := g.player.render(r); err != nil {
 				errChannel <- err
 			}
@@ -54,7 +58,7 @@ func (g *game) render() {
 	log.Println("[Game] Game render")
 }
 
-func newGame(r *sdl.Renderer, w, h int, eventsChan interface{}) (*game, error) {
+func newGame(r *sdl.Renderer, w, h int32, eventsChan interface{}) (*game, error) {
 	textures := make(map[string]*sdl.Texture)
 	// destroy ?
 	bgTexture, err := img.LoadTexture(r, "assets/imgs/wood-background.jpg")
@@ -81,4 +85,22 @@ func newGame(r *sdl.Renderer, w, h int, eventsChan interface{}) (*game, error) {
 		eventsChan: eventsChan,
 		textures:   textures,
 	}, nil
+}
+
+// background
+
+func (g *game) renderBackground(r *sdl.Renderer) error {
+	bgRect := &sdl.Rect{X: 0, Y: 0, W: g.w / 2, H: 1400}
+	if err := r.Copy(g.textures["bg"], nil, bgRect); err != nil {
+		return fmt.Errorf("could not copy background: %v", err)
+	}
+	leftWallRect := &sdl.Rect{X: 0, Y: 0, W: 80, H: 1400}
+	if err := r.CopyEx(g.textures["wall"], nil, leftWallRect, 0, nil, sdl.FLIP_HORIZONTAL); err != nil {
+		return fmt.Errorf("could not copy leftWallRect: %v", err)
+	}
+	rightWallRect := &sdl.Rect{X: g.w/2 - 80, Y: 0, W: 80, H: 1400}
+	if err := r.Copy(g.textures["wall"], nil, rightWallRect); err != nil {
+		return fmt.Errorf("could not copy rightWallRect: %v", err)
+	}
+	return nil
 }
