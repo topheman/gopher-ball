@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -19,15 +18,13 @@ func (m *manager) reset() {
 	m.paused = false
 }
 
-func (m *manager) run(r *sdl.Renderer) error {
+func (m *manager) run(r *sdl.Renderer, events <-chan sdl.Event) <-chan error {
 	log.Println("[Game manager] Game started")
 	m.paused = false
-	select {
-	case <-m.game.run(r):
-		return fmt.Errorf("Game loop problem")
-	case <-time.After(time.Second * 5):
-		return nil
-	}
+
+	errorChannel := m.game.run(r, events)
+
+	return errorChannel
 }
 
 func (m *manager) destroy() {

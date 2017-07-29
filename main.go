@@ -44,15 +44,22 @@ func run() error {
 	time.Sleep(time.Second * 2)
 
 	manager, err := newManager(r, gameWidth, gameHeight, metaWidth, true)
+	defer manager.destroy()
 	if err != nil {
 		return fmt.Errorf("Error creating Game manager: %v", err)
 	}
 
-	manager.run(r)
-	// cleanup all resources of the manager
-	defer manager.destroy()
-
-	return nil
+	events := make(chan sdl.Event)
+	errorChannel := manager.run(r, events)
+	defer close(events)
+	// wait for events and push them into "events" channel
+	for {
+		select {
+		case events <- sdl.WaitEvent():
+		case err := <-errorChannel:
+			return err
+		}
+	}
 }
 
 func drawWelcomeScreen(r *sdl.Renderer) error {

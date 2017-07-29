@@ -22,10 +22,10 @@ func (g *game) reset() {
 	log.Println("[Game] game reseted")
 }
 
-func (g *game) run(r *sdl.Renderer) <-chan error {
+func (g *game) run(r *sdl.Renderer, events <-chan sdl.Event) <-chan error {
 	log.Println("[Game] Game started")
 	errChannel := make(chan error)
-	// update + render loop
+	// render loop
 	go func() {
 		defer close(errChannel)
 		tick := time.Tick(5 * time.Millisecond)
@@ -43,6 +43,15 @@ func (g *game) run(r *sdl.Renderer) <-chan error {
 					errChannel <- err
 				}
 				r.Present()
+			}
+		}
+	}()
+	// update loop
+	go func() {
+		for {
+			select {
+			case e := <-events:
+				log.Printf("[Event] %T", e)
 			}
 		}
 	}()
