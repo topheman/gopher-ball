@@ -9,13 +9,12 @@ import (
 )
 
 type game struct {
-	time       int
-	w          int32
-	h          int32
-	player     *player
-	floor      *floor
-	ennemies   []interface{}
-	eventsChan interface{}
+	time     int
+	w        int32
+	h        int32
+	player   *player
+	floor    *floor
+	ennemies []interface{}
 }
 
 func (g *game) reset() {
@@ -72,7 +71,7 @@ func (g *game) render() {
 	log.Println("[Game] Game render")
 }
 
-func newGame(r *sdl.Renderer, w, h int32, eventsChan interface{}) (*game, error) {
+func newGame(r *sdl.Renderer, w, h int32) (*game, error) {
 
 	player, err := newPlayer(r)
 	if err != nil {
@@ -85,10 +84,9 @@ func newGame(r *sdl.Renderer, w, h int32, eventsChan interface{}) (*game, error)
 	}
 
 	return &game{
-		w:          w,
-		h:          h,
-		player:     player,
-		floor:      floor,
-		eventsChan: eventsChan,
+		w:      w,
+		h:      h,
+		player: player,
+		floor:  floor,
 	}, nil
 }

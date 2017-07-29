@@ -10,9 +10,8 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-const gameWidth = 1024
+const gameWidth = 600
 const gameHeight = 768
-const metaWidth = 300
 
 func main() {
 	err := run()
@@ -43,14 +42,14 @@ func run() error {
 
 	time.Sleep(time.Second * 2)
 
-	manager, err := newManager(r, gameWidth, gameHeight, metaWidth, true)
-	defer manager.destroy()
+	game, err := newGame(r, gameWidth, gameHeight)
+	defer game.destroy()
 	if err != nil {
-		return fmt.Errorf("Error creating Game manager: %v", err)
+		return fmt.Errorf("Error creating Game: %v", err)
 	}
 
 	events := make(chan sdl.Event)
-	errorChannel := manager.run(r, events)
+	errorChannel := game.run(r, events)
 	defer close(events)
 	// wait for events and push them into "events" channel
 	for {
