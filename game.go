@@ -50,7 +50,10 @@ func (g *game) run(r *sdl.Renderer, events <-chan sdl.Event) <-chan error {
 		for {
 			select {
 			case e := <-events:
-				log.Printf("[Event] %T", e)
+				if g.handleEvent(e) {
+					// in case of a quit event, push to the error channel, that will qui
+					errChannel <- fmt.Errorf("Done")
+				}
 			}
 		}
 	}()
@@ -69,6 +72,18 @@ func (g *game) update() {
 
 func (g *game) render() {
 	log.Println("[Game] Game render")
+}
+
+// returns true if this is a quit event
+func (g *game) handleEvent(event sdl.Event) bool {
+	switch event.(type) {
+	case *sdl.QuitEvent:
+		log.Printf("[Event] %T", event)
+		return true
+	default:
+		log.Printf("[Event] %T", event)
+		return false
+	}
 }
 
 func newGame(r *sdl.Renderer, w, h int32) (*game, error) {
