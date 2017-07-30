@@ -10,14 +10,15 @@ import (
 )
 
 type player struct {
-	mu       sync.RWMutex
-	w        float32
-	h        float32
-	x        float32
-	y        float32
-	dx       float32
-	dy       float32
-	textures map[string]*sdl.Texture
+	mu           sync.RWMutex
+	w            float32
+	h            float32
+	x            float32
+	y            float32
+	dx           float32
+	dy           float32
+	acceleration float32
+	textures     map[string]*sdl.Texture
 }
 
 func newPlayer(r *sdl.Renderer) (*player, error) {
@@ -35,12 +36,14 @@ func newPlayer(r *sdl.Renderer) (*player, error) {
 	textures["shadow"] = shadowTexture
 
 	return &player{
-		w:        50,
-		h:        50,
-		x:        150,
-		y:        500,
-		dx:       1.5,
-		textures: textures,
+		w:            50,
+		h:            50,
+		x:            150,
+		y:            500,
+		dx:           0.0,
+		dy:           0.0,
+		acceleration: 0.05,
+		textures:     textures,
 	}, nil
 }
 
@@ -65,15 +68,19 @@ func (p *player) update() {
 	defer p.mu.Unlock()
 	p.x += p.dx
 	p.y += p.dy
-	// p.x = int32((float32(p.x*100) + p.dx*100) / 100)
-	// p.y = int32((float32(p.y*100) + p.dy*100) / 100)
+}
+
+func (p *player) bumpAcceleration() {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	p.acceleration += 0.1
 }
 
 func (p *player) updateDirection(ddx, ddy float32) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
-	p.dx += ddx
-	p.dy += ddy
+	p.dx += p.acceleration * ddx
+	p.dy += p.acceleration * ddy
 }
 
 func (p *player) render(r *sdl.Renderer) error {
