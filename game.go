@@ -37,7 +37,7 @@ func (g *game) run(r *sdl.Renderer, events <-chan sdl.Event) <-chan error {
 				// update coordinates part
 				g.player.update()
 				// manage collision part
-
+				g.handleCollisions()
 				// render part
 				r.Clear()
 				if err := g.floor.render(r); err != nil {
@@ -88,7 +88,7 @@ func (g *game) bumpLevel() {
 
 func (g *game) handleCollisions() {
 	// player vs floor
-
+	managePlayerFloorCollision(g.player, g.floor)
 	// player vs ennemies
 
 	// ennemies vs floor

@@ -16,6 +16,7 @@ type floor struct {
 	x        int32
 	w        int32
 	h        int32
+	wall     int32
 	textures map[string]*sdl.Texture
 }
 
@@ -67,6 +68,7 @@ func newFloor(r *sdl.Renderer, gameWidth, gameHeight int32) (*floor, error) {
 	return &floor{
 		w:        gameWidth,
 		h:        gameHeight,
+		wall:     60,
 		textures: textures,
 	}, nil
 }
