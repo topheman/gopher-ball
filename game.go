@@ -27,15 +27,17 @@ func (g *game) reset() {
 func (g *game) run(r *sdl.Renderer, events <-chan sdl.Event) <-chan error {
 	log.Println("[Game] Game started")
 	errChannel := make(chan error)
-	// render loop
+	// update / render loop
 	go func() {
 		defer close(errChannel)
 		tick := time.Tick(5 * time.Millisecond)
 		for {
 			select {
 			case <-tick:
-				// update part
+				// update coordinates part
 				g.player.update()
+				// manage collision part
+
 				// render part
 				r.Clear()
 				if err := g.floor.render(r); err != nil {
@@ -48,7 +50,7 @@ func (g *game) run(r *sdl.Renderer, events <-chan sdl.Event) <-chan error {
 			}
 		}
 	}()
-	// update loop
+	// event loop
 	go func() {
 		for {
 			select {
@@ -82,6 +84,16 @@ func (g *game) bumpLevel() {
 	defer g.mu.Unlock()
 	g.level++
 	g.player.bumpAcceleration()
+}
+
+func (g *game) handleCollisions() {
+	// player vs floor
+
+	// player vs ennemies
+
+	// ennemies vs floor
+
+	// ennemie vs ennemies
 }
 
 // returns true if this is a quit event
