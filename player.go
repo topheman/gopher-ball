@@ -11,10 +11,10 @@ import (
 
 type player struct {
 	mu       sync.RWMutex
-	w        int32
-	h        int32
-	x        int32
-	y        int32
+	w        float32
+	h        float32
+	x        float32
+	y        float32
 	dx       float32
 	dy       float32
 	textures map[string]*sdl.Texture
@@ -44,7 +44,7 @@ func newPlayer(r *sdl.Renderer) (*player, error) {
 	}, nil
 }
 
-func (p *player) reset(x, y int32) {
+func (p *player) reset(x, y float32) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	p.x = x
@@ -63,8 +63,10 @@ func (p *player) destroy() {
 func (p *player) update() {
 	p.mu.Lock()
 	defer p.mu.Unlock()
-	p.x = int32((float32(p.x*100) + p.dx*100) / 100)
-	p.y = int32((float32(p.y*100) + p.dy*100) / 100)
+	p.x += p.dx
+	p.y += p.dy
+	// p.x = int32((float32(p.x*100) + p.dx*100) / 100)
+	// p.y = int32((float32(p.y*100) + p.dy*100) / 100)
 }
 
 func (p *player) updateDirection(ddx, ddy float32) {
@@ -77,11 +79,11 @@ func (p *player) updateDirection(ddx, ddy float32) {
 func (p *player) render(r *sdl.Renderer) error {
 	p.mu.RLock()
 	defer p.mu.RUnlock()
-	bgRect := &sdl.Rect{X: p.x - p.w/2, Y: p.y - p.h/2, W: p.w, H: p.h * 256 / 218}
+	bgRect := &sdl.Rect{X: int32(p.x - p.w/2), Y: int32(p.y - p.h/2), W: int32(p.w), H: int32(p.h * 256 / 218)}
 	if err := r.Copy(p.textures["shadow"], nil, bgRect); err != nil {
 		return fmt.Errorf("could not copy player shadow: %v", err)
 	}
-	rect := &sdl.Rect{X: p.x - p.w/2, Y: p.y - p.h/2, W: p.w, H: p.h}
+	rect := &sdl.Rect{X: int32(p.x - p.w/2), Y: int32(p.y - p.h/2), W: int32(p.w), H: int32(p.h)}
 	if err := r.Copy(p.textures["ball"], nil, rect); err != nil {
 		return fmt.Errorf("could not copy player ball: %v", err)
 	}
