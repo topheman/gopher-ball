@@ -67,6 +67,13 @@ func (p *player) update() {
 	p.y = int32((float32(p.y*100) + p.dy*100) / 100)
 }
 
+func (p *player) updateDirection(ddx, ddy float32) {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	p.dx += ddx
+	p.dy += ddy
+}
+
 func (p *player) render(r *sdl.Renderer) error {
 	p.mu.RLock()
 	defer p.mu.RUnlock()
