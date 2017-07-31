@@ -17,7 +17,7 @@ type game struct {
 	h        int32
 	player   *player
 	floor    *floor
-	ennemies []interface{}
+	ennemies *ennemies
 	level    int
 }
 
@@ -38,12 +38,16 @@ func (g *game) run(r *sdl.Renderer, events <-chan sdl.Event) <-chan error {
 				frameNumber++
 				// update coordinates part
 				g.player.update()
+				g.ennemies.update(frameNumber)
 				// g.floor.update() // no need
 				// manage collision part
 				g.handleCollisions()
 				// render part
 				r.Clear()
 				if err := g.floor.render(r, frameNumber); err != nil {
+					errChannel <- err
+				}
+				if err := g.ennemies.render(r); err != nil {
 					errChannel <- err
 				}
 				if err := g.player.render(r); err != nil {
@@ -143,11 +147,18 @@ func newGame(r *sdl.Renderer, w, h int32) (*game, error) {
 		return nil, fmt.Errorf("Error creating floor: %v", err)
 	}
 
+	limitX := make([]int32, 0)
+	ennemies, err := createEnnemies(r, limitX)
+	if err != nil {
+		return nil, fmt.Errorf("Error creating ennemies: %v", err)
+	}
+
 	return &game{
-		w:      w,
-		h:      h,
-		player: player,
-		floor:  floor,
-		level:  level,
+		w:        w,
+		h:        h,
+		player:   player,
+		floor:    floor,
+		level:    level,
+		ennemies: ennemies,
 	}, nil
 }
