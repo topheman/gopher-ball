@@ -18,11 +18,11 @@ type ennemy struct {
 	dy float32
 }
 
-func createEnnemy() *ennemy {
+func createEnnemy(x float32) *ennemy {
 	return &ennemy{
 		w:  50,
 		h:  50,
-		x:  150, // should be random
+		x:  x,
 		y:  -50,
 		dy: 1,
 	}
@@ -30,14 +30,14 @@ func createEnnemy() *ennemy {
 
 type ennemies struct {
 	list     []*ennemy
-	limitX   []int32
+	randomX  func() float32
 	textures map[string]*sdl.Texture
 }
 
 func (e *ennemies) update(frameNumber int32) {
 	// periodically add ennemy
 	if frameNumber%500 == 0 {
-		e.list = append(e.list, createEnnemy())
+		e.list = append(e.list, createEnnemy(e.randomX()))
 	}
 	// update y
 	for _, hole := range e.list {
@@ -50,7 +50,7 @@ func (e *ennemies) update(frameNumber int32) {
 func (e *ennemies) render(r *sdl.Renderer) error {
 	for _, hole := range e.list {
 		hole.mu.RLock()
-		bgRect := &sdl.Rect{X: int32(hole.x - hole.w/2), Y: int32(hole.y - hole.h/2), W: int32(hole.w), H: int32(hole.h)}
+		bgRect := &sdl.Rect{X: int32(hole.x - hole.w/2), Y: int32(hole.y - hole.h/2), W: int32(hole.w), H: int32(hole.h * 256 / 218)}
 		if err := r.Copy(e.textures["hole"], nil, bgRect); err != nil {
 			hole.mu.RUnlock()
 			return fmt.Errorf("could not copy hole: %v", err)
@@ -67,7 +67,7 @@ func (e *ennemies) destroy() {
 	}
 }
 
-func createEnnemies(r *sdl.Renderer, limitX []int32) (*ennemies, error) {
+func createEnnemies(r *sdl.Renderer, randomX func() float32) (*ennemies, error) {
 	textures := make(map[string]*sdl.Texture)
 	ballTexture, err := img.LoadTexture(r, "assets/imgs/ball-hole.png")
 	if err != nil {
@@ -79,7 +79,7 @@ func createEnnemies(r *sdl.Renderer, limitX []int32) (*ennemies, error) {
 
 	return &ennemies{
 		list:     list,
-		limitX:   limitX,
+		randomX:  randomX,
 		textures: textures,
 	}, nil
 }

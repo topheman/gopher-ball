@@ -146,9 +146,9 @@ func newGame(r *sdl.Renderer, w, h int32) (*game, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Error creating floor: %v", err)
 	}
+	randomX := floor.compileRandomX()
 
-	limitX := make([]int32, 0)
-	ennemies, err := createEnnemies(r, limitX)
+	ennemies, err := createEnnemies(r, randomX)
 	if err != nil {
 		return nil, fmt.Errorf("Error creating ennemies: %v", err)
 	}

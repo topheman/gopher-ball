@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"sync"
 
 	"github.com/veandco/go-sdl2/img"
@@ -53,6 +54,13 @@ func (f *floor) render(r *sdl.Renderer, frameNumber int32) error {
 		i++
 	}
 	return nil
+}
+
+// returns a function that return a random x coordinate
+func (f *floor) compileRandomX() func() float32 {
+	return func() float32 {
+		return rand.Float32()*float32(f.w-f.wall*2) + float32(f.wall)
+	}
 }
 
 func newFloor(r *sdl.Renderer, gameWidth, gameHeight int32) (*floor, error) {
