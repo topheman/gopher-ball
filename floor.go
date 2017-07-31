@@ -13,7 +13,7 @@ const imageHeight = 1400
 
 type floor struct {
 	mu       sync.RWMutex
-	x        int32
+	time     int32
 	w        int32
 	h        int32
 	wall     int32
@@ -27,26 +27,32 @@ func (f *floor) destroy() {
 	}
 }
 
-func (f *floor) update(dx int32) {
+func (f *floor) update() {
 	f.mu.Lock()
 	defer f.mu.Unlock()
-	f.x += dx
+	f.time++
 }
 
 func (f *floor) render(r *sdl.Renderer) error {
 	f.mu.RLock()
 	defer f.mu.RUnlock()
-	bgRect := &sdl.Rect{X: 0, Y: 0, W: f.w, H: 1400}
-	if err := r.Copy(f.textures["bg"], nil, bgRect); err != nil {
-		return fmt.Errorf("[Floor] could not copy background: %v", err)
-	}
-	leftWallRect := &sdl.Rect{X: 0, Y: 0, W: 80, H: 1400}
-	if err := r.CopyEx(f.textures["wall"], nil, leftWallRect, 0, nil, sdl.FLIP_HORIZONTAL); err != nil {
-		return fmt.Errorf("[Floor] could not copy leftWallRect: %v", err)
-	}
-	rightWallRect := &sdl.Rect{X: f.w - 80, Y: 0, W: 80, H: 1400}
-	if err := r.Copy(f.textures["wall"], nil, rightWallRect); err != nil {
-		return fmt.Errorf("[Floor] could not copy rightWallRect: %v", err)
+	var i int32
+	for i <= 1 {
+		// draw two tiles of floor
+		y := (i-1)*f.h + f.time%(f.h)
+		bgRect := &sdl.Rect{X: 0, Y: y, W: f.w, H: f.h}
+		if err := r.Copy(f.textures["bg"], nil, bgRect); err != nil {
+			return fmt.Errorf("[Floor] could not copy background: %v", err)
+		}
+		leftWallRect := &sdl.Rect{X: 0, Y: y, W: 80, H: f.h}
+		if err := r.CopyEx(f.textures["wall"], nil, leftWallRect, 0, nil, sdl.FLIP_HORIZONTAL); err != nil {
+			return fmt.Errorf("[Floor] could not copy leftWallRect: %v", err)
+		}
+		rightWallRect := &sdl.Rect{X: f.w - 80, Y: y, W: 80, H: f.h}
+		if err := r.Copy(f.textures["wall"], nil, rightWallRect); err != nil {
+			return fmt.Errorf("[Floor] could not copy rightWallRect: %v", err)
+		}
+		i++
 	}
 	return nil
 }

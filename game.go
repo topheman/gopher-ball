@@ -36,6 +36,7 @@ func (g *game) run(r *sdl.Renderer, events <-chan sdl.Event) <-chan error {
 			case <-tick:
 				// update coordinates part
 				g.player.update()
+				g.floor.update()
 				// manage collision part
 				g.handleCollisions()
 				// render part
