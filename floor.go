@@ -13,7 +13,6 @@ const imageHeight = 1400
 
 type floor struct {
 	mu       sync.RWMutex
-	time     int32
 	w        int32
 	h        int32
 	wall     int32
@@ -30,16 +29,15 @@ func (f *floor) destroy() {
 func (f *floor) update() {
 	f.mu.Lock()
 	defer f.mu.Unlock()
-	f.time++
 }
 
-func (f *floor) render(r *sdl.Renderer) error {
+func (f *floor) render(r *sdl.Renderer, frameNumber int32) error {
 	f.mu.RLock()
 	defer f.mu.RUnlock()
 	var i int32
 	for i <= 1 {
 		// draw two tiles of floor
-		y := (i-1)*f.h + f.time%(f.h)
+		y := (i-1)*f.h + frameNumber%(f.h)
 		bgRect := &sdl.Rect{X: 0, Y: y, W: f.w, H: f.h}
 		if err := r.Copy(f.textures["bg"], nil, bgRect); err != nil {
 			return fmt.Errorf("[Floor] could not copy background: %v", err)

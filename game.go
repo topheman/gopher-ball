@@ -9,9 +9,10 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
+var frameNumber int32
+
 type game struct {
 	mu       sync.RWMutex
-	time     int
 	w        int32
 	h        int32
 	player   *player
@@ -34,14 +35,15 @@ func (g *game) run(r *sdl.Renderer, events <-chan sdl.Event) <-chan error {
 		for {
 			select {
 			case <-tick:
+				frameNumber++
 				// update coordinates part
 				g.player.update()
-				g.floor.update()
+				// g.floor.update() // no need
 				// manage collision part
 				g.handleCollisions()
 				// render part
 				r.Clear()
-				if err := g.floor.render(r); err != nil {
+				if err := g.floor.render(r, frameNumber); err != nil {
 					errChannel <- err
 				}
 				if err := g.player.render(r); err != nil {
