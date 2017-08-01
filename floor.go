@@ -63,6 +63,13 @@ func (f *floor) compileRandomX() func(holeWidth float32) float32 {
 	}
 }
 
+// returns a function that returns true if the ennemy is out of the viewport (to remove it)
+func (f *floor) compileIsEnnemyOutside() func(e *ennemy) bool {
+	return func(e *ennemy) bool {
+		return int32(e.y) > f.h
+	}
+}
+
 func newFloor(r *sdl.Renderer, gameWidth, gameHeight int32) (*floor, error) {
 	textures := make(map[string]*sdl.Texture)
 	bgTexture, err := img.LoadTexture(r, "assets/imgs/wood-background.jpg")

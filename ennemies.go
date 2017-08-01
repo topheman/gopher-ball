@@ -33,9 +33,10 @@ func createEnnemy(x float32) *ennemy {
 }
 
 type ennemies struct {
-	list     []*ennemy
-	randomX  func(hole float32) float32
-	textures map[string]*sdl.Texture
+	list            []*ennemy
+	randomX         func(hole float32) float32
+	isEnnemyOutside func(e *ennemy) bool
+	textures        map[string]*sdl.Texture
 }
 
 func (e *ennemies) update(frameNumber int32) {
@@ -44,11 +45,13 @@ func (e *ennemies) update(frameNumber int32) {
 		// todo process ennemyWidth based on frameNumber (the bigger hole, the bigger frame number)
 		e.list = append(e.list, createEnnemy(e.randomX(ennemyWidth)))
 	}
-	// update y
-	for _, hole := range e.list {
-		hole.mu.RLock()
+	// update y + remove hole outside of viewport
+	for i := len(e.list) - 1; i >= 0; i-- {
+		hole := e.list[i]
 		hole.y += hole.dy
-		hole.mu.RUnlock()
+		if e.isEnnemyOutside(hole) {
+			e.list = append(e.list[:i], e.list[i+1:]...)
+		}
 	}
 }
 
@@ -72,7 +75,7 @@ func (e *ennemies) destroy() {
 	}
 }
 
-func createEnnemies(r *sdl.Renderer, randomX func(hole float32) float32) (*ennemies, error) {
+func createEnnemies(r *sdl.Renderer, randomX func(hole float32) float32, isEnnemyOutside func(e *ennemy) bool) (*ennemies, error) {
 	textures := make(map[string]*sdl.Texture)
 	ballTexture, err := img.LoadTexture(r, "assets/imgs/ball-hole.png")
 	if err != nil {
@@ -83,8 +86,9 @@ func createEnnemies(r *sdl.Renderer, randomX func(hole float32) float32) (*ennem
 	list := make([]*ennemy, 0)
 
 	return &ennemies{
-		list:     list,
-		randomX:  randomX,
-		textures: textures,
+		list:            list,
+		randomX:         randomX,
+		isEnnemyOutside: isEnnemyOutside,
+		textures:        textures,
 	}, nil
 }
