@@ -3,21 +3,24 @@ package main
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"sync"
 	"time"
 
 	"github.com/veandco/go-sdl2/sdl"
+	"github.com/veandco/go-sdl2/ttf"
 )
 
 var frameNumber int32
 
 type game struct {
-	mu       sync.RWMutex
-	w        int32
-	h        int32
-	player   *player
-	floor    *floor
-	ennemies *ennemies
+	mu        sync.RWMutex
+	w         int32
+	h         int32
+	player    *player
+	floor     *floor
+	scoreFont *ttf.Font
+	ennemies  *ennemies
 }
 
 func (g *game) reset() {
@@ -58,6 +61,7 @@ func (g *game) run(r *sdl.Renderer, events <-chan sdl.Event) <-chan error {
 				if err := g.player.render(r); err != nil {
 					errChannel <- err
 				}
+				g.renderScore(r)
 				r.Present()
 			}
 		}
@@ -81,14 +85,30 @@ func (g *game) destroy() {
 	defer log.Println("[Game] Game destroyed")
 	g.player.destroy()
 	g.floor.destroy()
+	g.scoreFont.Close()
 }
 
 func (g *game) update() {
 	log.Println("[Game] Game update")
 }
 
-func (g *game) render() {
-	log.Println("[Game] Game render")
+func (g *game) renderScore(r *sdl.Renderer) error {
+	surface, err := g.scoreFont.RenderUTF8_Solid("Score: "+strconv.Itoa(int(frameNumber)), sdl.Color{
+		R: 144,
+		G: 0,
+		B: 0,
+		A: 1,
+	})
+	defer surface.Free()
+	if err != nil {
+		return fmt.Errorf("Error creating score surface: %v", err)
+	}
+	texture, err := r.CreateTextureFromSurface(surface)
+	surfaceRect := &sdl.Rect{X: 200, Y: g.h - 80, W: 300, H: 60}
+	if err := r.Copy(texture, nil, surfaceRect); err != nil {
+		return fmt.Errorf("could not copy score texture: %v", err)
+	}
+	return nil
 }
 
 func (g *game) handleCollisions() {
@@ -149,11 +169,17 @@ func newGame(r *sdl.Renderer, w, h int32) (*game, error) {
 		return nil, fmt.Errorf("Error creating ennemies: %v", err)
 	}
 
+	scoreFont, err := ttf.OpenFont("./assets/fonts/UbuntuMono-B.ttf", 80)
+	if err != nil {
+		return nil, fmt.Errorf("Error opening font: %v", err)
+	}
+
 	return &game{
-		w:        w,
-		h:        h,
-		player:   player,
-		floor:    floor,
-		ennemies: ennemies,
+		w:         w,
+		h:         h,
+		player:    player,
+		floor:     floor,
+		ennemies:  ennemies,
+		scoreFont: scoreFont,
 	}, nil
 }

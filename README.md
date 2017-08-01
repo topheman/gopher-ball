@@ -39,3 +39,4 @@ The built files will be created in `./build/dist`. They are ignored by git.
 
 - assets/imgs/wood-background.png - [source](https://fr.vecteezy.com/art-vectoriel/133727-vector-wood-planks-background) - copyright by [carterart](https://fr.vecteezy.com/membres/carterart)
 - assets/imgs/gopher.png - [The Go gopher was designed by Renee French](http://reneefrench.blogspot.com/) / [gopher.png was created by Takuya Ueda](https://twitter.com/tenntenn) - [source](https://github.com/golang-samples)
+- assets/fonts/UbuntuMono-B.ttf - [from fontsquirrel.com]https://www.fontsquirrel.com/fonts/ubuntu-mono() - [under open license](http://font.ubuntu.com/ufl/)

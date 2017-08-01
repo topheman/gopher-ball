@@ -8,6 +8,7 @@ import (
 
 	"github.com/veandco/go-sdl2/img"
 	"github.com/veandco/go-sdl2/sdl"
+	"github.com/veandco/go-sdl2/ttf"
 )
 
 const gameWidth = 600
@@ -27,6 +28,11 @@ func run() error {
 		return fmt.Errorf("Error initializing SDL: %v", err)
 	}
 	defer sdl.Quit()
+
+	if err := ttf.Init(); err != nil {
+		return fmt.Errorf("Error initilizing ttf: %v", err)
+	}
+	defer ttf.Quit()
 
 	w, r, err := sdl.CreateWindowAndRenderer(gameWidth, gameHeight, sdl.WINDOW_SHOWN)
 	if err != nil {
