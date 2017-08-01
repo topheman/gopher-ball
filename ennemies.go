@@ -18,10 +18,14 @@ type ennemy struct {
 	dy float32
 }
 
+const (
+	ennemyWidth float32 = 50
+)
+
 func createEnnemy(x float32) *ennemy {
 	return &ennemy{
-		w:  50,
-		h:  50,
+		w:  ennemyWidth,
+		h:  ennemyWidth,
 		x:  x,
 		y:  -50,
 		dy: 1,
@@ -30,14 +34,15 @@ func createEnnemy(x float32) *ennemy {
 
 type ennemies struct {
 	list     []*ennemy
-	randomX  func() float32
+	randomX  func(hole float32) float32
 	textures map[string]*sdl.Texture
 }
 
 func (e *ennemies) update(frameNumber int32) {
 	// periodically add ennemy
 	if frameNumber%500 == 0 {
-		e.list = append(e.list, createEnnemy(e.randomX()))
+		// todo process ennemyWidth based on frameNumber (the bigger hole, the bigger frame number)
+		e.list = append(e.list, createEnnemy(e.randomX(ennemyWidth)))
 	}
 	// update y
 	for _, hole := range e.list {
@@ -67,7 +72,7 @@ func (e *ennemies) destroy() {
 	}
 }
 
-func createEnnemies(r *sdl.Renderer, randomX func() float32) (*ennemies, error) {
+func createEnnemies(r *sdl.Renderer, randomX func(hole float32) float32) (*ennemies, error) {
 	textures := make(map[string]*sdl.Texture)
 	ballTexture, err := img.LoadTexture(r, "assets/imgs/ball-hole.png")
 	if err != nil {

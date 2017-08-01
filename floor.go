@@ -56,10 +56,10 @@ func (f *floor) render(r *sdl.Renderer, frameNumber int32) error {
 	return nil
 }
 
-// returns a function that return a random x coordinate
-func (f *floor) compileRandomX() func() float32 {
-	return func() float32 {
-		return rand.Float32()*float32(f.w-f.wall*2) + float32(f.wall)
+// returns a function that return a random x coordinate, based on ennemy width (injected by ennemies class)
+func (f *floor) compileRandomX() func(holeWidth float32) float32 {
+	return func(holeWidth float32) float32 {
+		return rand.Float32()*float32(f.w-f.wall*2-int32(holeWidth)) + float32(f.wall+int32(holeWidth)/2)
 	}
 }
 
