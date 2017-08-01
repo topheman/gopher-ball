@@ -18,11 +18,13 @@ type game struct {
 	player   *player
 	floor    *floor
 	ennemies *ennemies
-	level    int
 }
 
 func (g *game) reset() {
 	log.Println("[Game] game reseted")
+	frameNumber = 0
+	g.ennemies.reset()
+	g.player.reset()
 }
 
 func (g *game) run(r *sdl.Renderer, events <-chan sdl.Event) <-chan error {
@@ -42,6 +44,9 @@ func (g *game) run(r *sdl.Renderer, events <-chan sdl.Event) <-chan error {
 				// g.floor.update() // no need
 				// manage collision part
 				g.handleCollisions()
+				if g.player.isDead() {
+					g.reset()
+				}
 				// render part
 				r.Clear()
 				if err := g.floor.render(r, frameNumber); err != nil {
@@ -86,21 +91,13 @@ func (g *game) render() {
 	log.Println("[Game] Game render")
 }
 
-func (g *game) bumpLevel() {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	g.level++
-	g.player.bumpAcceleration()
-}
-
 func (g *game) handleCollisions() {
 	// player vs floor
 	managePlayerFloorCollision(g.player, g.floor)
 	// player vs ennemies
-
-	// ennemies vs floor
-
-	// ennemie vs ennemies
+	if g.ennemies.checkCollision(g.player) {
+		g.player.die()
+	}
 }
 
 // returns true if this is a quit event
@@ -135,8 +132,6 @@ func (g *game) handleEvent(event sdl.Event) bool {
 
 func newGame(r *sdl.Renderer, w, h int32) (*game, error) {
 
-	level := 1
-
 	player, err := newPlayer(r)
 	if err != nil {
 		return nil, fmt.Errorf("Error creating player: %v", err)
@@ -159,7 +154,6 @@ func newGame(r *sdl.Renderer, w, h int32) (*game, error) {
 		h:        h,
 		player:   player,
 		floor:    floor,
-		level:    level,
 		ennemies: ennemies,
 	}, nil
 }

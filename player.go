@@ -9,6 +9,12 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
+const (
+	playerDefaultX            = 250
+	playerDefaultY            = 600
+	playerDefaultAcceleration = 0.1
+)
+
 type player struct {
 	mu           sync.RWMutex
 	w            float32
@@ -18,6 +24,7 @@ type player struct {
 	dx           float32
 	dy           float32
 	acceleration float32
+	dead         bool
 	textures     map[string]*sdl.Texture
 }
 
@@ -38,20 +45,37 @@ func newPlayer(r *sdl.Renderer) (*player, error) {
 	return &player{
 		w:            50,
 		h:            50,
-		x:            150,
-		y:            500,
+		x:            playerDefaultX,
+		y:            playerDefaultY,
 		dx:           0.0,
 		dy:           0.0,
-		acceleration: 0.05,
+		acceleration: playerDefaultAcceleration,
+		dead:         false,
 		textures:     textures,
 	}, nil
 }
 
-func (p *player) reset(x, y float32) {
+func (p *player) isDead() bool {
+	p.mu.RLock()
+	defer p.mu.RUnlock()
+	return p.dead
+}
+
+func (p *player) die() {
 	p.mu.Lock()
 	defer p.mu.Unlock()
-	p.x = x
-	p.y = y
+	p.dead = true
+}
+
+func (p *player) reset() {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	p.x = playerDefaultX
+	p.y = playerDefaultY
+	p.acceleration = playerDefaultAcceleration
+	p.dx = 0.0
+	p.dy = 0.0
+	p.dead = false
 }
 
 func (p *player) destroy() {

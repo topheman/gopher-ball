@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"math"
 	"sync"
 
 	"github.com/veandco/go-sdl2/img"
@@ -37,6 +38,22 @@ type ennemies struct {
 	randomX         func(hole float32) float32
 	isEnnemyOutside func(e *ennemy) bool
 	textures        map[string]*sdl.Texture
+}
+
+func (e *ennemies) reset() {
+	// reset slice + release memory
+	e.list = nil
+}
+
+func (e *ennemies) checkCollision(p *player) bool {
+	for _, hole := range e.list {
+		dx := math.Pow(math.Abs(float64(hole.x-p.x)), 2)
+		dy := math.Pow(math.Abs(float64(hole.y-p.y)), 2)
+		if math.Sqrt(dx+dy) < float64(hole.w/2) {
+			return true
+		}
+	}
+	return false
 }
 
 func (e *ennemies) update(frameNumber int32) {
