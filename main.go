@@ -70,9 +70,9 @@ func run() error {
 func drawWelcomeScreen(r *sdl.Renderer) error {
 	r.Clear()
 
-	splashScreen, err := img.LoadTexture(r, "assets/imgs/ball-steel-no-shadow.png")
+	splashScreen, err := img.LoadTexture(r, "assets/imgs/splashScreen.jpg")
 	if err != nil {
-		return fmt.Errorf("Error loading ball texture: %v", err)
+		return fmt.Errorf("Error loading splashScreen texture: %v", err)
 	}
 	defer splashScreen.Destroy()
 
