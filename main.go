@@ -70,21 +70,13 @@ func run() error {
 func drawWelcomeScreen(r *sdl.Renderer) error {
 	r.Clear()
 
-	gopherTexture, err := img.LoadTexture(r, "assets/imgs/gopher.png")
-	if err != nil {
-		return fmt.Errorf("Error loading gopher texture: %v", err)
-	}
-	defer gopherTexture.Destroy()
-
-	ballTexture, err := img.LoadTexture(r, "assets/imgs/ball-steel.png")
+	splashScreen, err := img.LoadTexture(r, "assets/imgs/ball-steel-no-shadow.png")
 	if err != nil {
 		return fmt.Errorf("Error loading ball texture: %v", err)
 	}
-	defer ballTexture.Destroy()
+	defer splashScreen.Destroy()
 
-	r.Copy(gopherTexture, nil, nil)
-
-	r.Copy(ballTexture, nil, nil)
+	r.Copy(splashScreen, nil, nil)
 
 	r.Present()
 

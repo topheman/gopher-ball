@@ -110,11 +110,11 @@ func (p *player) updateDirection(ddx, ddy float32) {
 func (p *player) render(r *sdl.Renderer) error {
 	p.mu.RLock()
 	defer p.mu.RUnlock()
-	bgRect := &sdl.Rect{X: int32(p.x - p.w/2), Y: int32(p.y - p.h/2), W: int32(p.w), H: int32(p.h * 256 / 218)}
+	bgRect := &sdl.Rect{X: int32(p.x - p.w/2), Y: int32(p.y - p.h/2), W: int32(p.w), H: int32(p.h * 117 / 100)}
 	if err := r.Copy(p.textures["shadow"], nil, bgRect); err != nil {
 		return fmt.Errorf("could not copy player shadow: %v", err)
 	}
-	rect := &sdl.Rect{X: int32(p.x - p.w/2), Y: int32(p.y - p.h/2), W: int32(p.w), H: int32(p.h)}
+	rect := &sdl.Rect{X: int32(p.x - p.w/2), Y: int32(p.y - p.h/2), W: int32(p.w), H: int32(p.h * 117 / 100)}
 	if err := r.Copy(p.textures["ball"], nil, rect); err != nil {
 		return fmt.Errorf("could not copy player ball: %v", err)
 	}
