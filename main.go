@@ -46,7 +46,7 @@ func run() error {
 		return fmt.Errorf("Error drawing welcome screen: %v", err)
 	}
 
-	time.Sleep(time.Second * 2)
+	time.Sleep(time.Second * 4)
 
 	game, err := newGame(r, gameWidth, gameHeight)
 	defer game.destroy()
