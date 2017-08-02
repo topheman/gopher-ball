@@ -23,6 +23,7 @@ const (
 	ennemyWidth float32 = 50
 )
 
+// @todo set w/h based on frameNumber, so that ennemies get bigger
 func createEnnemy(x float32) *ennemy {
 	return &ennemy{
 		w:  ennemyWidth,
@@ -57,8 +58,8 @@ func (e *ennemies) checkCollision(p *player) bool {
 }
 
 func (e *ennemies) update(frameNumber int32) {
-	// periodically add ennemy
-	if frameNumber%500 == 0 {
+	// periodically add ennemy - @todo - get a better algorithm
+	if frameNumber%int32(math.Max(1, float64(500-frameNumber/80))) == 0 {
 		// todo process ennemyWidth based on frameNumber (the bigger hole, the bigger frame number)
 		e.list = append(e.list, createEnnemy(e.randomX(ennemyWidth)))
 	}
