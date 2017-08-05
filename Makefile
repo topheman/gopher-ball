@@ -29,10 +29,19 @@ windows:
 	echo "Skipping Windows ..."
 
 darwin:
-	GOOS=darwin GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}-darwin-${GOARCH}.app . ; \
+	GOOS=darwin GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}-darwin-${GOARCH}.app .
+
 	mkdir -p ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}
 	mv ${BINARY}-darwin-${GOARCH}.app ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/
+
 	cp -R ./${ASSETS_DIRNAME} ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/${ASSETS_DIRNAME}
+	rm -rf ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/${ASSETS_DIRNAME}/originals
+
+	mkdir -p ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/lib
+	cp /usr/local/Cellar/sdl2/2.0.5/lib/libSDL2.dylib ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/lib/
+	cp /usr/local/Cellar/sdl2_image/2.0.1_2/lib/libSDL2_image.dylib ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/lib/
+	cp /usr/local/Cellar/sdl2_ttf/2.0.14/lib/libSDL2_ttf.dylib ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/lib/
+
 	zip -r ${BINARY}-darwin-${GOARCH}.zip ${BINARY}-darwin-${GOARCH}
 
 clean:
