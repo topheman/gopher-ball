@@ -47,6 +47,9 @@ You will run two different commands:
 
 ## Build - Help wanted
 
+* `make`: will create different bundles for each architexture (currently, only Mac OS X), in the `./dist` folder
+* `make clean`: cleans up the `./dist` folder
+
 If you install sdl2 and the go bindings for sdl2, you can build a binary to test the game. However, **it won't be ready for distribution**.
 
 How would you package this kind of app ?

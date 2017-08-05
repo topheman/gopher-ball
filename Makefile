@@ -10,7 +10,8 @@ COMMIT=$(shell git rev-parse HEAD)
 BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
 
 CURRENT_DIR=$(shell pwd)
-BUILD_DIR=${CURRENT_DIR}
+BUILD_DIRNAME = dist
+BUILD_DIR=${CURRENT_DIR}/${BUILD_DIRNAME}
 ASSETS_DIRNAME=assets
 
 # Setup the -ldflags option for go build here, interpolate the variable values
@@ -20,7 +21,7 @@ LDFLAGS = -ldflags "-s -X main.VERSION=${VERSION} -X main.COMMIT=${COMMIT} -X ma
 all: clean prepare linux darwin windows
 
 prepare:
-#	mkdir -p build/dist
+	mkdir -p dist
 
 linux:
 	echo "Skipping Linux ..."
@@ -43,10 +44,11 @@ darwin:
 	cp /usr/local/opt/sdl2_ttf/lib/libSDL2_ttf-2.0.0.dylib ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/lib/
 	cp /usr/lib/libSystem.B.dylib ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/lib/
 
-	zip -r ${BINARY}-darwin-${GOARCH}.zip ${BINARY}-darwin-${GOARCH}
+	cd ./${BUILD_DIRNAME}; \
+	zip -r ${BINARY}-darwin-${GOARCH}.zip ${BINARY}-darwin-${GOARCH}; \
+	cd - >/dev/null
 
 clean:
-	-rm -rf ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}
-	-rm -rf ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}.zip
+	-rm -rf ${BUILD_DIR}/*
 
 .PHONY: clean prepare linux darwin windows
