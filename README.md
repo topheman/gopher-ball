@@ -63,6 +63,6 @@ How would you package this kind of app ?
 
 ## Preview
 
-[See preview](http://imgur.com/x8HTTaZ)
+[![Preview](http://i.imgur.com/Y1bT6Du.gif)](http://i.imgur.com/Y1bT6Du.gif)
 
-[![Preview](https://raw.githubusercontent.com/topheman/gopher-ball/master/assets/imgs/splashScreen.jpg)](http://imgur.com/x8HTTaZ)
+[![Preview](https://raw.githubusercontent.com/topheman/gopher-ball/master/assets/imgs/splashScreen.jpg)](http://i.imgur.com/Y1bT6Du.gif)
