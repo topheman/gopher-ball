@@ -30,7 +30,7 @@ windows:
 	echo "Skipping Windows ..."
 
 darwin:
-	CGO_ENABLED=1 GOOS=darwin GOARCH=${GOARCH} go build ${LDFLAGS} ${CFLAGS} -o ${BINARY}-darwin-${GOARCH}.app .
+	CGO_ENABLED=1 GOOS=darwin GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}-darwin-${GOARCH}.app .
 
 	mkdir -p ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}
 	mv ${BINARY}-darwin-${GOARCH}.app ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/
