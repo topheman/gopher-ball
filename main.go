@@ -1,5 +1,12 @@
 package main
 
+// #cgo darwin LDFLAGS: -L /usr/local/opt/sdl2/lib -L /usr/local/opt/sdl2_image/lib -L /usr/local/opt/sdl2_ttf/lib
+// #cgo darwin CFLAGS: -I /usr/local/opt/sdl2/include/SDL2/ -I /usr/local/opt/sdl2_image/include/SDL2/ -I /usr/local/opt/sdl2_ttf/include/SDL2/
+// #include <SDL.h>
+// #include <SDL_image.h>
+// #include <SDL_ttf.h>
+import "C"
+
 import (
 	"fmt"
 	"os"

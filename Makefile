@@ -30,19 +30,13 @@ windows:
 	echo "Skipping Windows ..."
 
 darwin:
-	GOOS=darwin GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}-darwin-${GOARCH}.app .
+	CGO_ENABLED=1 GOOS=darwin GOARCH=${GOARCH} go build ${LDFLAGS} ${CFLAGS} -o ${BINARY}-darwin-${GOARCH}.app .
 
 	mkdir -p ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}
 	mv ${BINARY}-darwin-${GOARCH}.app ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/
 
 	cp -R ./${ASSETS_DIRNAME} ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/${ASSETS_DIRNAME}
 	rm -rf ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/${ASSETS_DIRNAME}/originals
-
-	mkdir -p ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/lib
-	cp /usr/local/opt/sdl2_image/lib/libSDL2_image-2.0.0.dylib ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/lib/
-	cp /usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/lib/
-	cp /usr/local/opt/sdl2_ttf/lib/libSDL2_ttf-2.0.0.dylib ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/lib/
-	cp /usr/lib/libSystem.B.dylib ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/lib/
 
 	cd ./${BUILD_DIRNAME}; \
 	zip -r ${BINARY}-darwin-${GOARCH}.zip ${BINARY}-darwin-${GOARCH}; \
