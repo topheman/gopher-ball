@@ -1,5 +1,11 @@
 package main
 
+// #cgo windows LDFLAGS: -lSDL2 -lSDL2_image -lSDL2_ttf
+// #cgo linux freebsd darwin pkg-config: sdl2
+// #cgo linux freebsd darwin LDFLAGS: -lSDL2_image -lSDL2_ttf
+// #include <sdl_wrapper.h>
+import "C"
+
 import (
 	"fmt"
 	"os"

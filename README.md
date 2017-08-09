@@ -39,13 +39,16 @@ $ go get -v github.com/veandco/go-sdl2/ttf
 
 ## Development
 
-You will run two different commands:
+You can build a dev version of the game via a simple `go build`.
 
-* [`./build.sh`](https://github.com/topheman/gopher-ball/blob/master/build.sh): generates a `gopher-ball` and a `gopher-ball.app` via `go build` script with proper flags - **There might be a better way**.
-* Then run `./gopher-ball` to start the app.
-* If you are on Mac OS X, you can open `./gopher-ball.app` from the finder (this isn't a real packaged app, I'm still working on that)
+You can also create the same build via `make darwin-dev` (same as `go build`, though it will name the binary `gopher-ball.app`, so that when you open it from the finder it doesn't open a terminal first).
 
 ## Build - Help wanted
+
+**This part is still in progress.**
+
+* `make`: will create different bundles for each architexture (currently, only Mac OS X), in the `./dist` folder
+* `make clean`: cleans up the `./dist` folder
 
 If you install sdl2 and the go bindings for sdl2, you can build a binary to test the game. However, **it won't be ready for distribution**.
 
