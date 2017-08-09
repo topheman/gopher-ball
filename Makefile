@@ -21,6 +21,7 @@ LDFLAGS = -ldflags "-s -X main.VERSION=${VERSION} -X main.COMMIT=${COMMIT} -X ma
 all: clean prepare linux darwin windows
 
 prepare:
+	echo "[WARNING] The development of this part is still in progress ..."
 	mkdir -p dist
 
 linux:
@@ -30,7 +31,7 @@ windows:
 	echo "Skipping Windows ..."
 
 darwin:
-	CGO_ENABLED=1 GOOS=darwin GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}-darwin-${GOARCH}.app .
+	CGO_ENABLED=0 GOOS=darwin GOARCH=${GOARCH} go build -o ${BINARY}-darwin-${GOARCH}.app .
 
 	mkdir -p ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}
 	mv ${BINARY}-darwin-${GOARCH}.app ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/
@@ -41,6 +42,9 @@ darwin:
 	cd ./${BUILD_DIRNAME}; \
 	zip -r ${BINARY}-darwin-${GOARCH}.zip ${BINARY}-darwin-${GOARCH}; \
 	cd - >/dev/null
+
+darwin-dev:
+	go build -o ${BINARY}.app
 
 clean:
 	-rm -rf ${BUILD_DIR}/*
