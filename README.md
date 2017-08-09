@@ -45,7 +45,7 @@ You can also create the same build via `make darwin-dev` (same as `go build`, th
 
 ## Build - Help wanted
 
-**This part is still in progress.**
+This part is still in progress. **[SEE ISSUE](https://github.com/topheman/gopher-ball/issues/2).**
 
 * `make`: will create different bundles for each architexture (currently, only Mac OS X), in the `./dist` folder
 * `make clean`: cleans up the `./dist` folder
