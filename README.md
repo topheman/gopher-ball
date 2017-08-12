@@ -1,6 +1,8 @@
 gopher-ball
 ===========
 
+**DOWNLOAD DEMOS** in the [release section](https://github.com/topheman/gopher-ball/releases) - choose your build by platform - currently only supporting MacOS (darwin).
+
 ## Goal
 
 I have a JavaScript background (both frontend and NodeJS). I started go a few weeks ago (really enjoy it - just like a NodeJS with pointers and threads 😜).
