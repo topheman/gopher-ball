@@ -47,8 +47,9 @@ You can also create the same build via `make darwin-dev` (same as `go build`, th
 
 This part is still in progress (for the moment, only MacOS packaging is supported).
 
-* `make`: will create different bundles for each architexture, in the `./dist` folder
+* `make darwin`: will create different bundles for each architexture, in the `./dist` folder
 * `make clean`: cleans up the `./dist` folder
+* `make` (alias of `make help`): prints out the documentation of the [Makefile](https://github.com/topheman/gopher-ball/blob/master/Makefile) 
 
 ### Explanation
 

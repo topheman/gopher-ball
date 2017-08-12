@@ -20,19 +20,38 @@ ASSETS_DIRNAME=assets
 LDFLAGS = -ldflags "-s -X main.VERSION=${VERSION} -X main.COMMIT=${COMMIT} -X main.BRANCH=${BRANCH}"
 
 # Build the project
-all: clean prepare linux darwin windows
+all: help
+
+help:
+	@echo ""
+	@echo "Usage:"
+	@echo ""
+	@echo "\tmake [command]"
+	@echo ""
+	@echo "The commands are:"
+	@echo ""
+	@echo "\tdarwin\t\t\tcompiles a bundle for MacOS in ./dist/gopher-ball-darwin-amd64.app (and zips it)"
+	@echo "\twindows\t\tcompiles a bundle for Windows [not yet implemented]"
+	@echo "\tlinux\t\t\t\tcompiles a bundle for Linux [not yet implemented]"
+	@echo ""
+	@echo "\tdarwin-dev\tsame as go build - but creates a file named gopher-ball.app (so that you can interact with it in the finder)"
+	@echo ""
+	@echo "\tclean\t\t\t\tcleans up ./dist folder (executed for each tasks above)"
+	@echo "\tprepare\t\tcreates ./dist folder if doesn't exist (executed for each tasks above)"
+	@echo ""
 
 prepare:
-	echo "[WARNING] The development of this part is still in progress ..."
-	mkdir -p dist
+	@echo "[WARNING] The development of this part is still in progress ..."
+	@echo "[INFO] Creating ./dist folder"
+	@mkdir -p dist
 
-linux:
-	echo "Skipping Linux ..."
+linux: clean prepare
+	@echo "Skipping Linux ..."
 
-windows:
-	echo "Skipping Windows ..."
+windows: clean prepare
+	@echo "Skipping Windows ..."
 
-darwin:
+darwin: clean prepare
 	go build -o ${BINARY}-darwin-${GOARCH} .
 
 	mkdir -p ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/{MacOS,Frameworks,Resources}
@@ -60,6 +79,5 @@ darwin-dev:
 	go build -o ${BINARY}.app
 
 clean:
+	@echo "[INFO] Cleaning ./dist folder"
 	-rm -rf ${DIST_DIR}/*
-
-.PHONY: clean prepare linux darwin windows
