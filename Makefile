@@ -53,7 +53,7 @@ darwin:
 	rm -rf ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Resources/${ASSETS_DIRNAME}/originals
 
 	cd ./${DIST_DIRNAME}; \
-	zip -r ${BINARY}-darwin-${GOARCH}.zip ${BINARY}-darwin-${GOARCH}.app; \
+	zip -r ${BINARY}-darwin-${GOARCH}.app.zip ${BINARY}-darwin-${GOARCH}.app; \
 	cd - >/dev/null
 
 darwin-dev:
