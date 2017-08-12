@@ -10,7 +10,9 @@ COMMIT=$(shell git rev-parse HEAD)
 BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
 
 CURRENT_DIR=$(shell pwd)
-BUILD_DIRNAME = dist
+DIST_DIRNAME = dist
+DIST_DIR=${CURRENT_DIR}/${DIST_DIRNAME}
+BUILD_DIRNAME = build
 BUILD_DIR=${CURRENT_DIR}/${BUILD_DIRNAME}
 ASSETS_DIRNAME=assets
 
@@ -31,22 +33,29 @@ windows:
 	echo "Skipping Windows ..."
 
 darwin:
-	CGO_ENABLED=0 GOOS=darwin GOARCH=${GOARCH} go build -o ${BINARY}-darwin-${GOARCH}.app .
+	go build -o ${BINARY}-darwin-${GOARCH} .
 
-	mkdir -p ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}
-	mv ${BINARY}-darwin-${GOARCH}.app ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/
+	mkdir -p ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/{MacOS,Frameworks}
+	mv ${BINARY}-darwin-${GOARCH} ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/MacOS
+	cp ${BUILD_DIR}/darwin/Contents/Info.plist ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents
 
-	cp -R ./${ASSETS_DIRNAME} ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/${ASSETS_DIRNAME}
-	rm -rf ${BUILD_DIR}/${BINARY}-darwin-${GOARCH}/${ASSETS_DIRNAME}/originals
+	cp /usr/local/opt/sdl2_image/lib/libSDL2_image-2.0.0.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
+	cp /usr/local/opt/sdl2_ttf/lib/libSDL2_ttf-2.0.0.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
+	cp /usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
 
-	cd ./${BUILD_DIRNAME}; \
-	zip -r ${BINARY}-darwin-${GOARCH}.zip ${BINARY}-darwin-${GOARCH}; \
+	cd ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/MacOS; \
+	install_name_tool -change /usr/local/opt/sdl2_image/lib/libSDL2_image-2.0.0.dylib @executable_path/../Frameworks/libSDL2_image-2.0.0.dylib ${BINARY}-darwin-${GOARCH}; \
+	install_name_tool -change /usr/local/opt/sdl2_ttf/lib/libSDL2_ttf-2.0.0.dylib @executable_path/../Frameworks/libSDL2_ttf-2.0.0.dylib ${BINARY}-darwin-${GOARCH}; \
+	install_name_tool -change /usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib @executable_path/../Frameworks/libSDL2-2.0.0.dylib ${BINARY}-darwin-${GOARCH}; \
 	cd - >/dev/null
+
+	cp -R ./${ASSETS_DIRNAME} ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/MacOS
+	rm -rf ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/MacOS/${ASSETS_DIRNAME}/originals
 
 darwin-dev:
 	go build -o ${BINARY}.app
 
 clean:
-	-rm -rf ${BUILD_DIR}/*
+	-rm -rf ${DIST_DIR}/*
 
 .PHONY: clean prepare linux darwin windows
