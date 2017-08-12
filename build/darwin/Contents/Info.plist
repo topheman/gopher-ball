@@ -12,5 +12,7 @@
 	<string>Gopher Ball game</string>
 	<key>LSRequiresIPhoneOS</key>
 	<string>false</string>
+	<key>CFBundleIconFile</key>
+	<string>icon</string>
 </dict>
 </plist>

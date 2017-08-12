@@ -37,7 +37,7 @@ darwin:
 
 	mkdir -p ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/{MacOS,Frameworks,Resources}
 	mv ${BINARY}-darwin-${GOARCH} ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/MacOS
-	cp ${BUILD_DIR}/darwin/Contents/Info.plist ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents
+	cp -R ${BUILD_DIR}/darwin/Contents ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app
 
 	cp /usr/local/opt/sdl2_image/lib/libSDL2_image-2.0.0.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
 	cp /usr/local/opt/sdl2_ttf/lib/libSDL2_ttf-2.0.0.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
@@ -50,7 +50,11 @@ darwin:
 	cd - >/dev/null
 
 	cp -R ./${ASSETS_DIRNAME} ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Resources/${ASSETS_DIRNAME}
-	rm -rf ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/MacOS/${ASSETS_DIRNAME}/originals
+	rm -rf ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Resources/${ASSETS_DIRNAME}/originals
+
+	cd ./${DIST_DIRNAME}; \
+	zip -r ${BINARY}-darwin-${GOARCH}.zip ${BINARY}-darwin-${GOARCH}.app; \
+	cd - >/dev/null
 
 darwin-dev:
 	go build -o ${BINARY}.app

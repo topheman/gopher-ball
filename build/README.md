@@ -1,0 +1,1 @@
+This folder contains template files used for packaging (for each OS).
