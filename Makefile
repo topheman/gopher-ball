@@ -35,7 +35,7 @@ windows:
 darwin:
 	go build -o ${BINARY}-darwin-${GOARCH} .
 
-	mkdir -p ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/{MacOS,Frameworks}
+	mkdir -p ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/{MacOS,Frameworks,Resources}
 	mv ${BINARY}-darwin-${GOARCH} ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/MacOS
 	cp ${BUILD_DIR}/darwin/Contents/Info.plist ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents
 
@@ -49,7 +49,7 @@ darwin:
 	install_name_tool -change /usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib @executable_path/../Frameworks/libSDL2-2.0.0.dylib ${BINARY}-darwin-${GOARCH}; \
 	cd - >/dev/null
 
-	cp -R ./${ASSETS_DIRNAME} ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/MacOS
+	cp -R ./${ASSETS_DIRNAME} ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Resources/${ASSETS_DIRNAME}
 	rm -rf ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/MacOS/${ASSETS_DIRNAME}/originals
 
 darwin-dev:
