@@ -45,9 +45,11 @@ You can also create the same build via `make darwin-dev` (same as `go build`, th
 
 ## Build
 
+### TLDR;
+
 This part is still in progress (for the moment, only MacOS packaging is supported).
 
-* `make darwin`: will create different bundles for each architexture, in the `./dist` folder
+* `make darwin`: will create a bundle for MacOS, in the `./dist` folder
 * `make clean`: cleans up the `./dist` folder
 * `make` (alias of `make help`): prints out the documentation of the [Makefile](https://github.com/topheman/gopher-ball/blob/master/Makefile) 
 
@@ -55,7 +57,7 @@ This part is still in progress (for the moment, only MacOS packaging is supporte
 
 There were a lot of apps made in golang with sdl2 (or other golang bridge with c) but none of them went all the way through the distribution step (making a standalone binary that you could share). This is the solution I came with (if you have a better one, please share it).
 
-In order to make a binary that you'll be able to share (with people who don't have go, neither sdl2 installed), you'll have to link the shared libraries used by the binary you built (via `go build`) and deliver a binary shipping with those libraries (that you'll have previously pointed to).
+In order to make **a binary that you'll be able to share** (with people who don't have go, neither sdl2 installed), you'll have to **link the shared libraries used by the binary** you built (via `go build`) and deliver a binary shipping with those libraries (that you'll have previously pointed to).
 
 On MacOS:
 
