@@ -61,11 +61,22 @@ darwin: clean prepare
 	cp /usr/local/opt/sdl2_image/lib/libSDL2_image-2.0.0.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
 	cp /usr/local/opt/sdl2_ttf/lib/libSDL2_ttf-2.0.0.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
 	cp /usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
+	cp /usr/local/opt/libpng/lib/libpng16.16.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
+	cp /usr/local/opt/libtiff/lib/libtiff.5.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
+	cp /usr/local/opt/webp/lib/libwebp.7.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
+	cp /usr/local/opt/jpeg/lib/libjpeg.9.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
 
 	cd ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/MacOS; \
 	install_name_tool -change /usr/local/opt/sdl2_image/lib/libSDL2_image-2.0.0.dylib @executable_path/../Frameworks/libSDL2_image-2.0.0.dylib ${BINARY}-darwin-${GOARCH}; \
 	install_name_tool -change /usr/local/opt/sdl2_ttf/lib/libSDL2_ttf-2.0.0.dylib @executable_path/../Frameworks/libSDL2_ttf-2.0.0.dylib ${BINARY}-darwin-${GOARCH}; \
 	install_name_tool -change /usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib @executable_path/../Frameworks/libSDL2-2.0.0.dylib ${BINARY}-darwin-${GOARCH}; \
+	sudo install_name_tool -id @executable_path/../Frameworks/libpng16.16.dylib ../Frameworks/libpng16.16.dylib; \
+	sudo install_name_tool -id @executable_path/../Frameworks/libtiff.5.dylib ../Frameworks/libtiff.5.dylib; \
+	sudo install_name_tool -id @executable_path/../Frameworks/libwebp.7.dylib ../Frameworks/libwebp.7.dylib; \
+	sudo install_name_tool -id @executable_path/../Frameworks/libjpeg.9.dylib ../Frameworks/libjpeg.9.dylib; \
+	cd - >/dev/null
+
+	cd ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks; \
 	cd - >/dev/null
 
 	cp -R ./${ASSETS_DIRNAME} ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Resources/${ASSETS_DIRNAME}
