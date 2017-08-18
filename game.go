@@ -127,10 +127,6 @@ func (g *game) handleEvent(event sdl.Event) bool {
 		log.Printf("[Event] %T", event)
 		return true
 	case *sdl.KeyDownEvent:
-		left := event.(*sdl.KeyDownEvent).Keysym.Sym == sdl.K_LEFT
-		right := event.(*sdl.KeyDownEvent).Keysym.Sym == sdl.K_RIGHT
-		up := event.(*sdl.KeyDownEvent).Keysym.Sym == sdl.K_UP
-		down := event.(*sdl.KeyDownEvent).Keysym.Sym == sdl.K_DOWN
 		// sdl.GetKeyboardState() doesn't seem to be working - can't handle two keys at the same time for the moment
 		switch event.(*sdl.KeyDownEvent).Keysym.Sym {
 		case sdl.K_UP:
@@ -142,10 +138,8 @@ func (g *game) handleEvent(event sdl.Event) bool {
 		case sdl.K_RIGHT:
 			g.player.updateDirection(1, 0)
 		}
-		log.Printf("[Event] %T | up: %v | right: %v | down: %v | left: %v", event, up, right, down, left)
 		return false
 	default:
-		log.Printf("[Event] %T", event)
 		return false
 	}
 }
