@@ -57,18 +57,22 @@ This part is still in progress (for the moment, only MacOS packaging is supporte
 
 ### Explanation
 
-There were a lot of apps made in golang with sdl2 (or other golang bridge with c) but none of them went all the way through the distribution step (making a standalone binary that you could share). This is the solution I came with (if you have a better one, please share it).
+There were a lot of apps made in golang with sdl2 (or other golang bridge with c) but none of them implement a **release step** (generate a standalone binary that you could share).
 
-In order to make **a binary that you'll be able to share** (with people who don't have go, neither sdl2 installed), you'll have to **link the shared libraries used by the binary** you built (via `go build`) and deliver a binary shipping with those libraries (that you'll have previously pointed to).
+Since, there are C libraries involved, it implies that you link them in some way in the bundle you will generate.
 
-On MacOS:
+Here is my solution (please share yours):
 
-* To list the libs used by your binary: `otool -L <binary_name>`
+#### On MacOS:
+
+I create a bundle with the same folder structure as any MacOS `.app`. Then I copy copy the shared libraries of SDL2 to `Contents/Frameworks` and link them via `install_name_tool`.
+
+Some infos:
+
+* To list the libs used by your binary: `otool -L <binary_name>` (same as Linux's `ldd`)
 * To link those libraries, use `install_name_tool -change <lib_name> @executable_path/../Frameworks/<lib_name> <binary_name>`
 
 Checkout the [Makefile](https://github.com/topheman/gopher-ball/blob/master/Makefile) for the whole build steps.
-
-If you install sdl2 and the go bindings for sdl2, you can build a binary to test the game. However, **it won't be ready for distribution**.
 
 Thanks to [veeableful](https://github.com/veeableful) for her help [on this issue](https://github.com/veandco/go-sdl2/issues/234).
 
