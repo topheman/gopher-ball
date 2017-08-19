@@ -61,11 +61,30 @@ darwin: clean prepare
 	cp /usr/local/opt/sdl2_image/lib/libSDL2_image-2.0.0.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
 	cp /usr/local/opt/sdl2_ttf/lib/libSDL2_ttf-2.0.0.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
 	cp /usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
+	cp /usr/local/opt/libpng/lib/libpng16.16.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
+	cp /usr/local/opt/libtiff/lib/libtiff.5.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
+	cp /usr/local/opt/webp/lib/libwebp.7.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
+	cp /usr/local/opt/jpeg/lib/libjpeg.9.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
+	cp /usr/local/opt/freetype/lib/libfreetype.6.dylib ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks
 
 	cd ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/MacOS; \
 	install_name_tool -change /usr/local/opt/sdl2_image/lib/libSDL2_image-2.0.0.dylib @executable_path/../Frameworks/libSDL2_image-2.0.0.dylib ${BINARY}-darwin-${GOARCH}; \
 	install_name_tool -change /usr/local/opt/sdl2_ttf/lib/libSDL2_ttf-2.0.0.dylib @executable_path/../Frameworks/libSDL2_ttf-2.0.0.dylib ${BINARY}-darwin-${GOARCH}; \
 	install_name_tool -change /usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib @executable_path/../Frameworks/libSDL2-2.0.0.dylib ${BINARY}-darwin-${GOARCH}; \
+	cd - >/dev/null
+
+	cd ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Frameworks; \
+	chmod +w libSDL2_image-2.0.0.dylib libSDL2_ttf-2.0.0.dylib libfreetype.6.dylib libtiff.5.dylib; \
+	install_name_tool -change /usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib @executable_path/../Frameworks/libSDL2-2.0.0.dylib libSDL2_image-2.0.0.dylib; \
+	install_name_tool -change /usr/local/opt/libpng/lib/libpng16.16.dylib @executable_path/../Frameworks/libpng16.16.dylib libSDL2_image-2.0.0.dylib; \
+	install_name_tool -change /usr/local/opt/libtiff/lib/libtiff.5.dylib @executable_path/../Frameworks/libtiff.5.dylib libSDL2_image-2.0.0.dylib; \
+	install_name_tool -change /usr/local/opt/webp/lib/libwebp.7.dylib @executable_path/../Frameworks/libwebp.7.dylib libSDL2_image-2.0.0.dylib; \
+	install_name_tool -change /usr/local/opt/jpeg/lib/libjpeg.9.dylib @executable_path/../Frameworks/libjpeg.9.dylib libSDL2_image-2.0.0.dylib; \
+	install_name_tool -change /usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib @executable_path/../Frameworks/libSDL2-2.0.0.dylib libSDL2_ttf-2.0.0.dylib; \
+	install_name_tool -change /usr/local/opt/freetype/lib/libfreetype.6.dylib @executable_path/../Frameworks/libfreetype.6.dylib libSDL2_ttf-2.0.0.dylib; \
+	install_name_tool -change /usr/local/opt/libpng/lib/libpng16.16.dylib @executable_path/../Frameworks/libpng16.16.dylib libfreetype.6.dylib; \
+	install_name_tool -change /usr/local/opt/jpeg/lib/libjpeg.9.dylib @executable_path/../Frameworks/libjpeg.9.dylib libtiff.5.dylib; \
+	chmod -w libSDL2_image-2.0.0.dylib libSDL2_ttf-2.0.0.dylib libfreetype.6.dylib libtiff.5.dylib; \
 	cd - >/dev/null
 
 	cp -R ./${ASSETS_DIRNAME} ${DIST_DIR}/${BINARY}-darwin-${GOARCH}.app/Contents/Resources/${ASSETS_DIRNAME}
@@ -80,4 +99,4 @@ darwin-dev:
 
 clean:
 	@echo "[INFO] Cleaning ./dist folder"
-	-rm -rf ${DIST_DIR}/*
+	-rm -rf ${DIST_DIRNAME}/*

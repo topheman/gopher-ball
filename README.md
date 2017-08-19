@@ -1,17 +1,35 @@
 gopher-ball
 ===========
 
-**DOWNLOAD DEMOS** in the [release section](https://github.com/topheman/gopher-ball/releases) - choose your build by platform - currently only supporting MacOS (darwin).
+<table>
+    <tr>
+        <td>
+            <a href="https://github.com/topheman/gopher-ball/releases" style="text-decoration:none;">
+                <img src="https://raw.githubusercontent.com/topheman/gopher-ball/master/assets/originals/icon.png" width="75" />
+                <strong>DOWNLOAD DEMOS</strong> in the releases section
+            </a>
+            <br />
+            Choose your build by platform - currently only supporting MacOS (darwin).
+        </td>
+        <td style="width:30%; text-align: right;">
+            <a href="http://i.imgur.com/Y1bT6Du.gif">
+                <img src="http://i.imgur.com/G064PZD.gif">
+            </a>
+        </td>
+    </tr>
+</table>
 
 ## Goal
 
 I have a JavaScript background (both frontend and NodeJS). I started go a few weeks ago (really enjoy it - just like a NodeJS with pointers and threads 😜).
 
-I needed some project to test on. For the last years, I made a few [video games in JavaScript](http://dev.topheman.com/my-projects/) and I think it's a good way to learn a new programming language (some people will tell that it's a little weird to learn go that way which might be more server/data oriented).
+For my first side project in Go, I decided to make a video game, since I think it's a [very good way](http://dev.topheman.com/my-projects/) to get into a new programming language.
 
-Anyway here is my first golang project. I must thank [Francesc Campoy](https://github.com/campoy) for his great [Youtube Videos JustForFunc](https://youtu.be/aYkxFbd6luY?list=PL64wiCrrxh4Jisi7OcCJIUpguV_f5jGnZ).
+The [Youtube Videos tutorial JustForFunc](https://youtu.be/aYkxFbd6luY?list=PL64wiCrrxh4Jisi7OcCJIUpguV_f5jGnZ) by [Francesc Campoy](https://github.com/campoy) were a great resource.
 
-As you will see, **this is still a work in progress**. If some of you have infos about the build part, please share them via the [issues](https://github.com/topheman/gopher-ball/issues), [twitter](https://twitter.com/topheman) or any other way ...
+At the end, the development only took me a few days whereas the [packaging / build part](#build) took me a lot of time (and is still in progress) ... For this part, I must thank [veeableful](https://github.com/veeableful) for her help [on this issue](https://github.com/veandco/go-sdl2/issues/234).
+
+If you feel like to help, please take a look at the [issues](https://github.com/topheman/gopher-ball/issues).
 
 ## Install
 
@@ -57,20 +75,22 @@ This part is still in progress (for the moment, only MacOS packaging is supporte
 
 ### Explanation
 
-There were a lot of apps made in golang with sdl2 (or other golang bridge with c) but none of them went all the way through the distribution step (making a standalone binary that you could share). This is the solution I came with (if you have a better one, please share it).
+There were a lot of apps made in golang with sdl2 (or other golang bridge with c) but none of them implement a **release step** (generate a standalone binary that you could share).
 
-In order to make **a binary that you'll be able to share** (with people who don't have go, neither sdl2 installed), you'll have to **link the shared libraries used by the binary** you built (via `go build`) and deliver a binary shipping with those libraries (that you'll have previously pointed to).
+Since, there are C libraries involved, it implies that you link them in some way in the bundle you will generate. Here is my solution (please share yours):
 
-On MacOS:
+#### On MacOS:
 
-* To list the libs used by your binary: `otool -L <binary_name>`
-* To link those libraries, use `install_name_tool -change <lib_name> @executable_path/../Frameworks/<lib_name> <binary_name>`
+* Create a bundle with the same folder structure as any MacOS `.app`
+* Identify the specific shared libraries (the ones under `/user/local`) using `otool -L <binary_name>` (same as Linux's `ldd`)
+* Repeat previous step on each libraries (to identify the links between nested libraries)
+* Copy those libraries to the bundle inside `Contents/Frameworks`
+* Link the root libraries (the one required by the binary) with `install_name_tool -change <lib_name> @executable_path/../Frameworks/<lib_name> <binary_name>`
+* Link the nested libraries with `install_name_tool -change <lib_name> @executable_path/../Frameworks/<lib_name> <parent_lib_name>`
 
-Checkout the [Makefile](https://github.com/topheman/gopher-ball/blob/master/Makefile) for the whole build steps.
+**Checkout the [Makefile](https://github.com/topheman/gopher-ball/blob/master/Makefile)** for the whole build steps.
 
-If you install sdl2 and the go bindings for sdl2, you can build a binary to test the game. However, **it won't be ready for distribution**.
-
-Thanks to [veeableful](https://github.com/veeableful) for her help [on this issue](https://github.com/veandco/go-sdl2/issues/234).
+Note: Some part of that could be automated via some recursive script - [here is a start](https://github.com/topheman/gopher-ball/blob/master/bin/otool_list.sh).
 
 ## Credits
 

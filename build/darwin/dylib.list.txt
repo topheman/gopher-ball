@@ -1,0 +1,6 @@
+/usr/local/opt/sdl2_image/lib/libSDL2_image-2.0.0.dylib
+/usr/local/opt/libpng/lib/libpng16.16.dylib
+/usr/local/opt/jpeg/lib/libjpeg.9.dylib
+/usr/local/opt/libtiff/lib/libtiff.5.dylib
+/usr/local/opt/webp/lib/libwebp.7.dylib
+/usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib
