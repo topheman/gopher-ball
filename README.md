@@ -23,11 +23,13 @@ gopher-ball
 
 I have a JavaScript background (both frontend and NodeJS). I started go a few weeks ago (really enjoy it - just like a NodeJS with pointers and threads 😜).
 
-I needed some project to test on. For the last years, I made a few [video games in JavaScript](http://dev.topheman.com/my-projects/) and I think it's a good way to learn a new programming language (some people will tell that it's a little weird to learn go that way which might be more server/data oriented).
+For my first side project in Go, I decided to make a video game, since I think it's a [very good way](http://dev.topheman.com/my-projects/) to get into a new programming language.
 
-Anyway here is my first golang project. I must thank [Francesc Campoy](https://github.com/campoy) for his great [Youtube Videos JustForFunc](https://youtu.be/aYkxFbd6luY?list=PL64wiCrrxh4Jisi7OcCJIUpguV_f5jGnZ).
+The [Youtube Videos tutorial JustForFunc](https://youtu.be/aYkxFbd6luY?list=PL64wiCrrxh4Jisi7OcCJIUpguV_f5jGnZ) by [Francesc Campoy](https://github.com/campoy) were a great resource.
 
-As you will see, **this is still a work in progress**. If some of you have infos about the build part, please share them via the [issues](https://github.com/topheman/gopher-ball/issues), [twitter](https://twitter.com/topheman) or any other way ...
+At the end, the development only took me a few days whereas the [packaging / build part](#build) took me a lot of time (and is still in progress) ... For this part, I must thank [veeableful](https://github.com/veeableful) for her help [on this issue](https://github.com/veandco/go-sdl2/issues/234).
+
+If you feel like to help, please take a look at the [issues](https://github.com/topheman/gopher-ball/issues).
 
 ## Install
 
@@ -75,22 +77,20 @@ This part is still in progress (for the moment, only MacOS packaging is supporte
 
 There were a lot of apps made in golang with sdl2 (or other golang bridge with c) but none of them implement a **release step** (generate a standalone binary that you could share).
 
-Since, there are C libraries involved, it implies that you link them in some way in the bundle you will generate.
-
-Here is my solution (please share yours):
+Since, there are C libraries involved, it implies that you link them in some way in the bundle you will generate. Here is my solution (please share yours):
 
 #### On MacOS:
 
-I create a bundle with the same folder structure as any MacOS `.app`. Then I copy copy the shared libraries of SDL2 to `Contents/Frameworks` and link them via `install_name_tool`.
+* Create a bundle with the same folder structure as any MacOS `.app`
+* Identify the specific shared libraries (the ones under `/user/local`) using `otool -L <binary_name>` (same as Linux's `ldd`)
+* Repeat previous step on each libraries (to identify the links between nested libraries)
+* Copy those libraries to the bundle inside `Contents/Frameworks`
+* Link the root libraries (the one required by the binary) with `install_name_tool -change <lib_name> @executable_path/../Frameworks/<lib_name> <binary_name>`
+* Link the nested libraries with `install_name_tool -change <lib_name> @executable_path/../Frameworks/<lib_name> <parent_lib_name>`
 
-Some infos:
+**Checkout the [Makefile](https://github.com/topheman/gopher-ball/blob/master/Makefile)** for the whole build steps.
 
-* To list the libs used by your binary: `otool -L <binary_name>` (same as Linux's `ldd`)
-* To link those libraries, use `install_name_tool -change <lib_name> @executable_path/../Frameworks/<lib_name> <binary_name>`
-
-Checkout the [Makefile](https://github.com/topheman/gopher-ball/blob/master/Makefile) for the whole build steps.
-
-Thanks to [veeableful](https://github.com/veeableful) for her help [on this issue](https://github.com/veandco/go-sdl2/issues/234).
+Note: Some part of that could be automated via some recursive script - [here is a start](https://github.com/topheman/gopher-ball/blob/master/bin/otool_list.sh).
 
 ## Credits
 
