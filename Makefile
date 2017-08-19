@@ -48,7 +48,7 @@ prepare:
 linux: clean prepare
 	@echo "Skipping Linux ..."
 
-windows: cleanwindows prepare
+windows: clean prepare
 	go build -ldflags "-H windowsgui" -o ${BINARY}-windows-${GOARCH}.exe .
 
 	mkdir -p ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
@@ -128,10 +128,6 @@ darwin: clean prepare
 
 darwin-dev:
 	go build -o ${BINARY}.app
-
-cleanwindows:
-	@echo "[INFO] Cleaning ./dist folder"
-	-rm -rf ${DIST_DIRNAME}/*
 
 clean:
 	@echo "[INFO] Cleaning ./dist folder"
