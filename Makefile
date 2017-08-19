@@ -95,4 +95,4 @@ darwin-dev:
 
 clean:
 	@echo "[INFO] Cleaning ./dist folder"
-	-rm -rf ${DIST_DIR}/*
+	-rm -rf ${DIST_DIRNAME}/*
