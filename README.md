@@ -100,6 +100,8 @@ To list the `dll` used by the binary (using cygwin as bash):
 ldd dist/gopher-ball-windows-amd64/gopher-ball-windows-amd64.exe | grep -v Windows
 ```
 
+Or use [dependencywalker](http://www.dependencywalker.com/).
+
 ## Credits
 
 - assets/imgs/wood-background.png - [source](https://fr.vecteezy.com/art-vectoriel/133727-vector-wood-planks-background) - copyright by [carterart](https://fr.vecteezy.com/membres/carterart)
