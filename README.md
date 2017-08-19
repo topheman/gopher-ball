@@ -1,7 +1,23 @@
 gopher-ball
 ===========
 
-**DOWNLOAD DEMOS** in the [release section](https://github.com/topheman/gopher-ball/releases) - choose your build by platform - currently only supporting MacOS (darwin).
+<table>
+    <tr>
+        <td>
+            <a href="https://github.com/topheman/gopher-ball/releases" style="text-decoration:none;">
+                <img src="https://raw.githubusercontent.com/topheman/gopher-ball/master/assets/originals/icon.png" width="75" />
+                <strong>DOWNLOAD DEMOS</strong> in the releases section
+            </a>
+            <br />
+            Choose your build by platform - currently only supporting MacOS (darwin).
+        </td>
+        <td style="width:30%; text-align: right;">
+            <a href="http://i.imgur.com/Y1bT6Du.gif">
+                <img src="http://i.imgur.com/G064PZD.gif">
+            </a>
+        </td>
+    </tr>
+</table>
 
 ## Goal
 
