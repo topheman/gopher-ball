@@ -92,6 +92,16 @@ Since, there are C libraries involved, it implies that you link them in some way
 
 Note: Some part of that could be automated via some recursive script - [here is a start](https://github.com/topheman/gopher-ball/blob/master/bin/otool_list.sh).
 
+#### On Windows:
+
+To list the `dll` used by the binary (using cygwin as bash):
+
+```
+ldd dist/gopher-ball-windows-amd64/gopher-ball-windows-amd64.exe | grep -v Windows
+```
+
+Or use [dependencywalker](http://www.dependencywalker.com/).
+
 ## Credits
 
 - assets/imgs/wood-background.png - [source](https://fr.vecteezy.com/art-vectoriel/133727-vector-wood-planks-background) - copyright by [carterart](https://fr.vecteezy.com/membres/carterart)

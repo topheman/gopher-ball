@@ -49,7 +49,39 @@ linux: clean prepare
 	@echo "Skipping Linux ..."
 
 windows: clean prepare
-	@echo "Skipping Windows ..."
+	go build -ldflags "-H windowsgui" -o ${BINARY}-windows-${GOARCH}.exe .
+
+	mkdir -p ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	mv ${BINARY}-windows-${GOARCH}.exe ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+
+	cp C:\msys64\mingw64\bin\SDL2.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\SDL2_ttf.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\SDL2_image.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\libpng16-16.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\libtiff-5.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\libwebp-6.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\libjpeg-8.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\libfreetype-6.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\liblzma-5.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\zlib1.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\liblzma-5.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\libbz2-1.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\libharfbuzz-0.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\libgcc_s_seh-1.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\libglib-2.0-0.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\libgraphite2.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\libwinpthread-1.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\libintl-8.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\libpcre-1.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\libstdc++-6.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	cp C:\msys64\mingw64\bin\libiconv-2.dll ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+
+	cp -R ./${ASSETS_DIRNAME} ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}
+	rm -rf ${DIST_DIRNAME}/${BINARY}-windows-${GOARCH}/${ASSETS_DIRNAME}/originals
+
+	cd ./${DIST_DIRNAME}; \
+	zip -r ${BINARY}-windows-${GOARCH}.zip ${BINARY}-windows-${GOARCH}; \
+	cd - >/dev/null
 
 darwin: clean prepare
 	go build -o ${BINARY}-darwin-${GOARCH} .
