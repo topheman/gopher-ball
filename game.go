@@ -104,6 +104,7 @@ func (g *game) renderScore(r *sdl.Renderer) error {
 		return fmt.Errorf("Error creating score surface: %v", err)
 	}
 	texture, err := r.CreateTextureFromSurface(surface)
+	defer texture.Destroy()
 	surfaceRect := &sdl.Rect{X: 200, Y: g.h - 80, W: 300, H: 60}
 	if err := r.Copy(texture, nil, surfaceRect); err != nil {
 		return fmt.Errorf("could not copy score texture: %v", err)
