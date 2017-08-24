@@ -9,7 +9,7 @@ gopher-ball
                 <strong>DOWNLOAD DEMOS</strong> in the releases section
             </a>
             <br />
-            Choose your build by platform - currently only supporting MacOS (darwin).
+            Choose your build by platform - supporting both MacOS (darwin) and Windows.
         </td>
         <td style="width:30%; text-align: right;">
             <a href="http://i.imgur.com/Y1bT6Du.gif">
@@ -67,9 +67,8 @@ You can also create the same build via `make darwin-dev` (same as `go build`, th
 
 ### TLDR;
 
-This part is still in progress (for the moment, only MacOS packaging is supported).
-
-* `make darwin`: will create a bundle for MacOS, in the `./dist` folder
+* `make darwin`: will create a bundle for MacOS, in the `./dist` folder (needs a Mac OS system)
+* `make windows`: will create a bundle for Windows, in the `./dist` folder (needs a Windows system)
 * `make clean`: cleans up the `./dist` folder
 * `make` (alias of `make help`): prints out the documentation of the [Makefile](https://github.com/topheman/gopher-ball/blob/master/Makefile) 
 
